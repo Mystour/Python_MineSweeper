@@ -11,9 +11,10 @@ class SelectLevel:
         self.root.title("Minesweeper")
 
         self.root.update()
+        self.root.minsize(self.root.winfo_width(), self.root.winfo_height())
         self.center_window(self.root)
 
-        tk.Label(self.root, text="Select the level").pack()
+        tk.Label(self.root, text="Select the level", height=5).pack()
 
         self.frame = tk.Frame(self.root)
         self.frame.pack()
@@ -25,9 +26,9 @@ class SelectLevel:
         ]
 
         self.labels = [
-            tk.Label(self.frame, text="8 * 8, 10 mines"),
-            tk.Label(self.frame, text="16 * 16, 40 mines"),
-            tk.Label(self.frame, text="24 * 24, 99 mines")
+            tk.Label(self.frame, text="8 * 8, 10 mines", height=3),
+            tk.Label(self.frame, text="16 * 16, 40 mines", height=3),
+            tk.Label(self.frame, text="24 * 24, 99 mines", height=3)
         ]
 
         self.main()

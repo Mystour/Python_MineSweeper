@@ -1,4 +1,3 @@
-# 导入必要的模块
 import random
 import sys
 import tkinter as tk
@@ -9,10 +8,6 @@ class SelectLevel:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Minesweeper")
-
-        self.root.update()
-        self.root.minsize(self.root.winfo_width(), self.root.winfo_height())
-        self.center_window(self.root)
 
         tk.Label(self.root, text="Select the level", height=5).pack()
 
@@ -33,6 +28,9 @@ class SelectLevel:
 
         self.main()
 
+        self.root.update()
+        self.center_window(self.root)
+
     def beginner(self):
         self.root.destroy()
         MineSweeper(8, 8, 10).root.mainloop()
@@ -47,14 +45,21 @@ class SelectLevel:
 
     @staticmethod
     def center_window(root):
-        root.update_idletasks()
-        width = root.winfo_width()
-        height = root.winfo_height()
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        position_top = int(screen_height / 2 - height / 2)
-        position_right = int(screen_width / 2 - width / 2)
-        root.geometry(f"{width}x{height}+{position_right}+{position_top}")
+        def update_window():
+            # get the window dimension
+            width = root.winfo_reqwidth()
+            height = root.winfo_reqheight()
+
+            # get the screen dimension
+            screen_width = root.winfo_screenwidth()
+            screen_height = root.winfo_screenheight()
+
+            # calculate the position of the window
+            position_top = int(screen_height / 2 - height / 2)
+            position_right = int(screen_width / 2 - width / 2)
+            root.geometry(f"{width}x{height}+{position_right}+{position_top}")
+
+        root.after_idle(update_window)
 
     def main(self):
         for i in range(3):
@@ -73,8 +78,6 @@ class MineSweeper:
         # create the main window
         self.root = tk.Tk()
         self.root.title("Minesweeper")
-
-        SelectLevel.center_window(self.root)
 
         # initialize the game state
         self.over = False
@@ -114,15 +117,9 @@ class MineSweeper:
         # bind the button click event
         self.bind_buttons(self.width, self.height, self.buttons, num_of_mines, self.mines, self.game_label)
 
-    def center_window(self):
-        self.root.update_idletasks()
-        width = self.root.winfo_width()
-        height = self.root.winfo_height()
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        position_top = int(screen_height / 2 - height / 2)
-        position_right = int(screen_width / 2 - width / 2)
-        self.root.geometry("+{0}+{1}".format(position_right, position_top))
+        # center the window
+        self.root.update()
+        SelectLevel.center_window(self.root)
 
     # create a 2D list to store the buttons
     def create_buttons(self, h, w, frame):

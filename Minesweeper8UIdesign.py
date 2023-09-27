@@ -103,9 +103,9 @@ class MineSweeper:
         self.game_label.pack()
 
         # create the game buttons
-        self.button_quit = tk.Button(self.root, text="quit", command=self.quit)
+        self.button_quit = tk.Button(self.root, text="quit", command=self.quit, width=10)
         self.button_quit.pack(side=tk.LEFT)
-        self.button_restart = tk.Button(self.root, text="restart", command=self.restart)
+        self.button_restart = tk.Button(self.root, text="restart", command=self.restart, width=10)
         self.button_restart.pack(side=tk.LEFT)
 
         # initialize the game

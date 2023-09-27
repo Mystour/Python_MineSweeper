@@ -28,7 +28,6 @@ class SelectLevel:
 
         self.main()
 
-        self.root.update()
         self.center_window(self.root)
 
     def beginner(self):
@@ -45,21 +44,18 @@ class SelectLevel:
 
     @staticmethod
     def center_window(root):
-        def update_window():
-            # get the window dimension
-            width = root.winfo_reqwidth()
-            height = root.winfo_reqheight()
+        # get the window dimension
+        width = root.winfo_reqwidth()
+        height = root.winfo_reqheight()
 
-            # get the screen dimension
-            screen_width = root.winfo_screenwidth()
-            screen_height = root.winfo_screenheight()
+        # get the screen dimension
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
 
-            # calculate the position of the window
-            position_top = int(screen_height / 2 - height / 2)
-            position_right = int(screen_width / 2 - width / 2)
-            root.geometry(f"{width}x{height}+{position_right}+{position_top}")
-
-        root.after_idle(update_window)
+        # calculate the position of the window
+        position_top = int(screen_height / 2 - height / 2)
+        position_right = int(screen_width / 2 - width / 2)
+        root.geometry(f"{width}x{height}+{position_right}+{position_top}")
 
     def main(self):
         for i in range(3):

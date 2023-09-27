@@ -10,17 +10,8 @@ class SelectLevel:
         self.root = tk.Tk()
         self.root.title("Minesweeper")
 
-        # Get screen width and height
-        self.screen_width = self.root.winfo_screenwidth()
-        self.screen_height = self.root.winfo_screenheight()
-
-        # Set window position
-        self.window_width = 350
-        self.window_height = 200
-        self.position_top = int(self.screen_height / 2 - self.window_height / 2)
-        self.position_right = int(self.screen_width / 2 - self.window_width / 2)
-
-        self.root.geometry(f"{self.window_width}x{self.window_height}+{self.position_right}+{self.position_top}")
+        self.root.update()
+        self.center_window(self.root)
 
         tk.Label(self.root, text="Select the level").pack()
 
@@ -43,15 +34,26 @@ class SelectLevel:
 
     def beginner(self):
         self.root.destroy()
-        MineSweeper(8, 8, 10, self.screen_width, self.screen_height).root.mainloop()
+        MineSweeper(8, 8, 10).root.mainloop()
 
     def intermediate(self):
         self.root.destroy()
-        MineSweeper(16, 16, 40, self.screen_width, self.screen_height).root.mainloop()
+        MineSweeper(16, 16, 40).root.mainloop()
 
     def expert(self):
         self.root.destroy()
-        MineSweeper(24, 24, 99, self.screen_width, self.screen_height).root.mainloop()
+        MineSweeper(24, 24, 99).root.mainloop()
+
+    @staticmethod
+    def center_window(root):
+        root.update_idletasks()
+        width = root.winfo_width()
+        height = root.winfo_height()
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        position_top = int(screen_height / 2 - height / 2)
+        position_right = int(screen_width / 2 - width / 2)
+        root.geometry(f"{width}x{height}+{position_right}+{position_top}")
 
     def main(self):
         for i in range(3):
@@ -61,7 +63,7 @@ class SelectLevel:
 
 
 class MineSweeper:
-    def __init__(self, width, height, num_of_mines, screen_width, screen_height):
+    def __init__(self, width, height, num_of_mines):
         # initialize the game constants
         self.width = width
         self.height = height
@@ -71,13 +73,7 @@ class MineSweeper:
         self.root = tk.Tk()
         self.root.title("Minesweeper")
 
-        # Set window position
-        self.window_width = 350
-        self.window_height = 400
-        self.position_top = int(screen_height / 2 - self.window_height / 2)
-        self.position_right = int(screen_width / 2 - self.window_width / 2)
-
-        self.root.geometry(f"{self.window_width}x{self.window_height}+{self.position_right}+{self.position_top}")
+        SelectLevel.center_window(self.root)
 
         # initialize the game state
         self.over = False

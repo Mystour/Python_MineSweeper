@@ -475,7 +475,7 @@ class MineSweeper(BaseInterface):
 
 
 def main():
-    # create the MineSweeper object
+    # create the main window
     game = SelectLevel()
 
     # start the main event loop

@@ -235,10 +235,7 @@ class MineSweeper(BaseInterface):
                 buttons[i0][j0].config(command=lambda i=i0, j=j0: self.reveal(i, j, w, h, buttons, mines, label))
                 buttons[i0][j0].bind("<Button-3>",
                                      lambda event, i=i0, j=j0:
-                                     self.place_flag(i, j, buttons, num_of_mines, mines, label))
-                buttons[i0][j0].bind("<Button-2>", lambda event, i=i0, j=j0: self.remove_flag(i, j, buttons,
-                                                                                              num_of_mines, mines,
-                                                                                              label))
+                                     self.place_remove_flag(i, j, buttons, num_of_mines, mines, label))
 
     # define the left click event
     def reveal(self, i, j, w, h, buttons, mines, label) -> None:
@@ -268,7 +265,13 @@ class MineSweeper(BaseInterface):
                         if buttons[x][y]["state"] == "normal":
                             self.reveal(x, y, w, h, buttons, mines, label)
 
-    # define the right click event
+    def place_remove_flag(self, i, j, buttons, num_of_mines, mines, label) -> None:
+        if buttons[i][j]["state"] == "normal":
+            self.place_flag(i, j, buttons, num_of_mines, mines, label)
+        elif buttons[i][j]["state"] == "disabled" and buttons[i][j]["text"] == "F":
+            self.remove_flag(i, j, buttons, num_of_mines, mines, label)
+        self.check_win(buttons, num_of_mines, label)
+
     def place_flag(self, i, j, buttons, num_of_mines, mines, label) -> None:
         """
         the right click event -> place the flag
@@ -280,15 +283,14 @@ class MineSweeper(BaseInterface):
         :param label: the label to display the result
         :return: None
         """
-        if buttons[i][j]["state"] == "normal":
-            buttons[i][j].config(text="F", state="disabled")
-            self.change_flags_label(i, j, buttons, num_of_mines, mines, label, 1)
-            self.check_win(buttons, num_of_mines, label)
+        buttons[i][j].config(text="F", state="disabled")
+        self.change_flags_label(i, j, buttons, num_of_mines, mines, label, 1)
 
     # define the middle click event
 
     def remove_flag(self, i, j, buttons, num_of_mines, mines, label) -> None:
         """
+        the right click event -> remove the flag
         the middle click event -> remove the flag
         :param i: the x coordinate
         :param j: the y coordinate
@@ -298,9 +300,8 @@ class MineSweeper(BaseInterface):
         :param label: the label to display the result
         :return: None
         """
-        if buttons[i][j]["state"] == "disabled" and buttons[i][j]["text"] == "F":
-            buttons[i][j].config(text="", state="normal")
-            self.change_flags_label(i, j, buttons, num_of_mines, mines, label, -1)
+        buttons[i][j].config(text="", state="normal")
+        self.change_flags_label(i, j, buttons, num_of_mines, mines, label, -1)
 
     # change the number of flags label
     def check_flag(self, i, j, mines) -> None:

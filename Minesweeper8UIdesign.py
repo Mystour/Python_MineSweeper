@@ -108,7 +108,7 @@ class MineSweeper(BaseInterface):
         # initialize the game constants
         self.width: int = width
         self.height: int = height
-        self.num_of_mines = num_of_mines
+        self.num_of_mines: int = num_of_mines
 
         # create the main window
         super().__init__()

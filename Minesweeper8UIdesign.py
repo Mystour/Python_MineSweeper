@@ -42,7 +42,7 @@ class SelectLevel(BaseInterface):
 
         tk.Label(self.root, text="Select the level", height=5).pack()
 
-        self.frame = tk.Frame(self.root)
+        self.frame: tk.Frame = tk.Frame(self.root)
         self.frame.pack()
 
         self.buttons = [

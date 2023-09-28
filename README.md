@@ -1,5 +1,5 @@
 # Python_MineSweeper
-This Python script represents a classic Minesweeper game.\\
+This Python script represents a classic Minesweeper game.  
 The game initiates with the user deciding the difficulty level - Beginner, Intermediate, or Expert, with each level having preset numbers of mines.\\
 The main game board is created as a matrix of buttons in tkinter GUI package. The game begins with a total count of mines and a timer starts to record the time.\\
 For each square(cell), if it isn't a mine, on left-click it reveals the number of mines in the neighboring cells, and if it is a mine, the game ends.\\

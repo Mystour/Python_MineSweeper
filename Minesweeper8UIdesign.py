@@ -98,7 +98,7 @@ class SelectLevel(BaseInterface):
 
 
 class MineSweeper(BaseInterface):
-    def __init__(self, width: int, height, num_of_mines) -> None:
+    def __init__(self, width: int, height: int, num_of_mines: int) -> None:
         """
         initialize the MineSweeper game
         :param width: the width of the board
@@ -107,7 +107,7 @@ class MineSweeper(BaseInterface):
         """
         # initialize the game constants
         self.width: int = width
-        self.height = height
+        self.height: int = height
         self.num_of_mines = num_of_mines
 
         # create the main window

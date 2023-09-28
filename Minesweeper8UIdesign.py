@@ -133,6 +133,7 @@ class MineSweeper(BaseInterface):
 
         # initialize the game state
         self.over = False
+        self.is_show_answer = False
 
         # create the timer
         self.time_label = tk.Label(self.root, text="0 s")
@@ -162,6 +163,10 @@ class MineSweeper(BaseInterface):
         self.button_quit.pack(side=tk.LEFT)
         self.button_restart = tk.Button(self.root, text="restart", command=self.restart, width=10)
         self.button_restart.pack(side=tk.LEFT)
+        self.button_show_hide_answer = tk.Button(self.root, text="show answer",
+                                                 command=lambda:
+                                                 self.show_hide_answer(self.buttons, self.mines), width=15)
+        self.button_show_hide_answer.pack(side=tk.LEFT)
 
         # initialize the game
         self.correct_flags_count = 0
@@ -385,6 +390,44 @@ class MineSweeper(BaseInterface):
                 buttons[mine[0]][mine[1]].config(text="*", background="red")
             else:
                 buttons[mine[0]][mine[1]].config(background="green")
+
+    def show_answer(self, buttons, mines) -> None:
+        """
+        show the answer
+        :param buttons: the list of buttons
+        :param mines: the list of mines
+        :return: None
+        """
+        for mine in mines:
+            if buttons[mine[0]][mine[1]]["text"] != "F":
+                buttons[mine[0]][mine[1]].config(text="*")
+        self.button_show_hide_answer.config(text="hide answer")
+
+    def hide_answer(self, buttons, mines) -> None:
+        """
+        hide the answer
+        :param buttons: the list of buttons
+        :param mines: the list of mines
+        :return: None
+        """
+        for mine in mines:
+            if buttons[mine[0]][mine[1]]["text"] != "F":
+                buttons[mine[0]][mine[1]].config(text="")
+        self.button_show_hide_answer.config(text="show answer")
+
+    def show_hide_answer(self, buttons, mines) -> None:
+        """
+        show or hide the answer
+        :param buttons: the list of buttons
+        :param mines: the list of mines
+        :return: None
+        """
+        if self.is_show_answer:
+            self.hide_answer(buttons, mines)
+            self.is_show_answer = False
+        else:
+            self.show_answer(buttons, mines)
+            self.is_show_answer = True
 
     # disable all buttons
     @staticmethod

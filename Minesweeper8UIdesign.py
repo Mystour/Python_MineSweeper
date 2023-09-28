@@ -117,10 +117,8 @@ class MineSweeper(BaseInterface):
         self.over = False
 
         # create the timer
-        self.start_time = time.time()
         self.time_label = tk.Label(self.root, text="0 s")
         self.time_label.pack()
-        self.update_timer(self.time_label)
 
         # create the game area
         self.frame = tk.Frame(self.root)
@@ -154,6 +152,10 @@ class MineSweeper(BaseInterface):
         # center the window
         self.root.update()
         super().center_window(self.root)
+
+        # start the timer
+        self.start_time = time.time()
+        self.update_timer(self.time_label)
 
     # create a 2D list to store the buttons
     def create_buttons(self, h, w, frame) -> list:

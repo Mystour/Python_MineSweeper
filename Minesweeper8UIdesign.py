@@ -92,8 +92,8 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         for i in range(3):
-            self.buttons[i].grid(row=0, column=i)
-            self.labels[i].grid(row=1, column=i)
+            self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)
+            self.labels[i].grid(row=1, column=i, sticky=tk.NSEW)
         self.root.mainloop()
 
 
@@ -122,7 +122,13 @@ class MineSweeper(BaseInterface):
 
         # create the game area
         self.frame = tk.Frame(self.root)
-        self.frame.pack()
+        self.frame.pack(fill='both', expand=True)  # fill and expand make the frame expand with the window
+
+        # make all rows and columns in the frame expand with the frame
+        for i in range(height):
+            self.frame.rowconfigure(i, weight=1)
+        for i in range(width):
+            self.frame.columnconfigure(i, weight=1)
 
         # create the number of mines label and the number of flags label
         self.mines_label = tk.Label(self.root, text=f"{num_of_mines} mines")
@@ -179,7 +185,7 @@ class MineSweeper(BaseInterface):
         :return: the button
         """
         button = tk.Button(frame, width=2, height=1)
-        button.grid(row=i, column=j)
+        button.grid(row=i, column=j, sticky=tk.NSEW)
         return button
 
     # randomly generate the positions of mines

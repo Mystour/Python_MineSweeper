@@ -32,6 +32,26 @@ class BaseInterface:
         position_right = int(screen_width / 2 - width / 2)
         root.geometry(f"{width}x{height}+{position_right}+{position_top}")
 
+    @staticmethod
+    def create_frame(root, width, height) -> tk.Frame:
+        """
+        create a frame
+        :param root: the main window
+        :param width: the width of the frame
+        :param height: the height of the frame
+        :return: the frame
+        """
+        frame = tk.Frame(root, width=width, height=height)
+        frame.pack(fill='both', expand=True)
+
+        # make all rows and columns in the frame expand with the frame
+        for i in range(height):
+            frame.rowconfigure(i, weight=1)
+        for i in range(width):
+            frame.columnconfigure(i, weight=1)
+
+        return frame
+
 
 class SelectLevel(BaseInterface):
     def __init__(self):
@@ -42,8 +62,7 @@ class SelectLevel(BaseInterface):
 
         tk.Label(self.root, text="Select the level", height=5).pack()
 
-        self.frame: tk.Frame = tk.Frame(self.root)
-        self.frame.pack()
+        self.frame: tk.Frame = super().create_frame(self.root, 3, 2)
 
         self.buttons = [
             tk.Button(self.frame, text="Beginner", command=self.beginner),
@@ -57,7 +76,7 @@ class SelectLevel(BaseInterface):
             tk.Label(self.frame, text="24 * 24, 99 mines", height=3)
         ]
 
-        self.main()
+        self.place_buttons_labels()
 
         self.root.update()
         super().center_window(self.root)
@@ -86,15 +105,14 @@ class SelectLevel(BaseInterface):
         self.root.destroy()
         MineSweeper(24, 24, 99).root.mainloop()
 
-    def main(self):
+    def place_buttons_labels(self) -> None:
         """
-        place the buttons and labels and start the main event loop
+        place the buttons and labels
         :return: None
         """
         for i in range(3):
-            self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)
+            self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)  # sticky=tk.NSEW makes the buttons expand
             self.labels[i].grid(row=1, column=i, sticky=tk.NSEW)
-        self.root.mainloop()
 
 
 class MineSweeper(BaseInterface):
@@ -121,8 +139,7 @@ class MineSweeper(BaseInterface):
         self.time_label.pack()
 
         # create the game area
-        self.frame = tk.Frame(self.root)
-        self.frame.pack(fill='both', expand=True)  # fill and expand make the frame expand with the window
+        self.frame = super().create_frame(self.root, width, height)
 
         # make all rows and columns in the frame expand with the frame
         for i in range(height):

@@ -125,6 +125,7 @@ class MineSweeper(BaseInterface):
         :param num_of_mines: the number of mines
         """
         # initialize the game constants
+        self.mines = None
         self.width: int = width
         self.height: int = height
         self.num_of_mines: int = num_of_mines
@@ -136,6 +137,7 @@ class MineSweeper(BaseInterface):
         # initialize the game state
         self.over = False
         self.is_show_answer = False
+        self.first_click_done = False
 
         # create the timer
         self.time_label = tk.Label(self.root, text="0 s")
@@ -173,7 +175,6 @@ class MineSweeper(BaseInterface):
         # initialize the game
         self.correct_flags_count = 0
         self.flags_count = 0
-        self.mines = self.random_mines(self.width, self.height, self.num_of_mines)
         self.buttons = self.place_buttons(self.width, self.height, self.frame)
 
         # bind the button click event
@@ -214,9 +215,11 @@ class MineSweeper(BaseInterface):
 
     # randomly generate the positions of mines
     @staticmethod
-    def random_mines(w, h, m) -> list:
+    def random_mines(i_first_click, j_first_click, w, h, m) -> tuple:
         """
         randomly generate the positions of mines
+        :param i_first_click: the x coordinate of the first click
+        :param j_first_click: the y coordinate of the first click
         :param w: the width of the board
         :param h: the height of the board
         :param m: the number of mines
@@ -224,10 +227,10 @@ class MineSweeper(BaseInterface):
         """
         mines = []
         while len(mines) < m:
-            mine = (random.randint(0, w - 1), random.randint(0, h - 1))
-            if mine not in mines:
-                mines.append(mine)
-        return mines
+            possible_mine = (random.randint(0, w - 1), random.randint(0, h - 1))
+            if possible_mine != (i_first_click, j_first_click) and possible_mine not in mines:
+                mines.append(possible_mine)
+        return tuple(mines)
 
     # count the number of mines around (i, j)
     @staticmethod
@@ -248,21 +251,6 @@ class MineSweeper(BaseInterface):
                     count += 1
         return count
 
-    @staticmethod
-    def get_color_for_number(number):
-        # Define colors for numbers from 1 to 8
-        colors = {
-            1: 'blue',
-            2: 'green',
-            3: 'red',
-            4: 'purple',
-            5: 'maroon',
-            6: 'turquoise',
-            7: 'black',
-            8: 'gray'
-        }
-        return colors.get(number, 'black')
-
     # bind the button click event
     def bind_buttons(self, w, h, buttons, num_of_mines, mines, label) -> None:
         """
@@ -277,13 +265,13 @@ class MineSweeper(BaseInterface):
         """
         for i0 in range(w):
             for j0 in range(h):
-                buttons[i0][j0].config(command=lambda i=i0, j=j0: self.reveal(i, j, w, h, buttons, mines, label))
+                buttons[i0][j0].config(command=lambda i=i0, j=j0: self.reveal(i, j, w, h, buttons, label))
                 buttons[i0][j0].bind("<Button-3>",
                                      lambda event, i=i0, j=j0:
                                      self.place_remove_flag(i, j, buttons, num_of_mines, mines, label))
 
     # define the left click event
-    def reveal(self, i, j, w, h, buttons, mines, label) -> None:
+    def reveal(self, i, j, w, h, buttons, label) -> None:
         """
         the left click event -> reveal the button
         :param label: the label to display the result
@@ -292,17 +280,20 @@ class MineSweeper(BaseInterface):
         :param w: the width of the board
         :param h: the height of the board
         :param buttons: the list of buttons
-        :param mines: the list of mines
         :return: None
         """
-        if (i, j) in mines:
+        if not self.first_click_done:
+            self.first_click_done = True
+            self.mines = self.random_mines(i, j, self.width, self.height, self.num_of_mines)
+
+        if (i, j) in self.mines:
             buttons[i][j].config(text="*", background="red", state="disabled")
             self.turn_off_buttons(buttons)
             label.config(text="Game Over")
-            self.change_mine_color(buttons, mines)
+            self.change_mine_color(buttons, self.mines)
             self.over = True
         else:
-            count = self.count_mines(i, j, w, h, mines)
+            count = self.count_mines(i, j, w, h, self.mines)
             buttons[i][j].config(state="disabled", bg=self.normal_color)
             if count != 0:
                 buttons[i][j].config(text=count)
@@ -310,7 +301,7 @@ class MineSweeper(BaseInterface):
                 for x in range(max(0, i - 1), min(w, i + 2)):
                     for y in range(max(0, j - 1), min(h, j + 2)):
                         if buttons[x][y]["state"] == "normal":
-                            self.reveal(x, y, w, h, buttons, mines, label)
+                            self.reveal(x, y, w, h, buttons, label)
 
     def place_remove_flag(self, i, j, buttons, num_of_mines, mines, label) -> None:
         if buttons[i][j]["state"] == "normal":

@@ -60,7 +60,8 @@ class SelectLevel(BaseInterface):
         """
         super().__init__()
 
-        tk.Label(self.root, text="Select the level", height=5).pack()
+        tk.Label(self.root, text="Select the level",
+                 height=5, font=("Lucida Handwriting", 15), bg="light blue").pack(fill=tk.BOTH, expand=1)
 
         self.frame: tk.Frame = super().create_frame(self.root, 3, 2)
 
@@ -127,6 +128,7 @@ class MineSweeper(BaseInterface):
         self.width: int = width
         self.height: int = height
         self.num_of_mines: int = num_of_mines
+        self.normal_color: str = "SystemButtonFace"
 
         # create the main window
         super().__init__()
@@ -172,7 +174,7 @@ class MineSweeper(BaseInterface):
         self.correct_flags_count = 0
         self.flags_count = 0
         self.mines = self.random_mines(self.width, self.height, self.num_of_mines)
-        self.buttons = self.create_buttons(self.width, self.height, self.frame)
+        self.buttons = self.place_buttons(self.width, self.height, self.frame)
 
         # bind the button click event
         self.bind_buttons(self.width, self.height, self.buttons, num_of_mines, self.mines, self.game_label)
@@ -186,7 +188,7 @@ class MineSweeper(BaseInterface):
         self.update_timer(self.time_label)
 
     # create a 2D list to store the buttons
-    def create_buttons(self, h, w, frame) -> list:
+    def place_buttons(self, h, w, frame) -> list:
         """
         create a 2D list to store the buttons
         :param h: the height of the board
@@ -194,11 +196,11 @@ class MineSweeper(BaseInterface):
         :param frame: the frame to place the buttons
         :return: the 2D list of buttons
         """
-        return [[self.place_button(i, j, frame) for j in range(h)] for i in range(w)]
+        return [[self.create_button(i, j, frame) for j in range(h)] for i in range(w)]
 
     # place a button
     @staticmethod
-    def place_button(i, j, frame) -> tk.Button:
+    def create_button(i, j, frame) -> tk.Button:
         """
         place a button
         :param i: the x coordinate
@@ -206,7 +208,7 @@ class MineSweeper(BaseInterface):
         :param frame: the frame to place the buttons
         :return: the button
         """
-        button = tk.Button(frame, width=2, height=1)
+        button = tk.Button(frame, width=2, height=1, bg="light blue", relief=tk.GROOVE)
         button.grid(row=i, column=j, sticky=tk.NSEW)
         return button
 
@@ -245,6 +247,21 @@ class MineSweeper(BaseInterface):
                 if (x, y) in mines:
                     count += 1
         return count
+
+    @staticmethod
+    def get_color_for_number(number):
+        # Define colors for numbers from 1 to 8
+        colors = {
+            1: 'blue',
+            2: 'green',
+            3: 'red',
+            4: 'purple',
+            5: 'maroon',
+            6: 'turquoise',
+            7: 'black',
+            8: 'gray'
+        }
+        return colors.get(number, 'black')
 
     # bind the button click event
     def bind_buttons(self, w, h, buttons, num_of_mines, mines, label) -> None:
@@ -286,8 +303,10 @@ class MineSweeper(BaseInterface):
             self.over = True
         else:
             count = self.count_mines(i, j, w, h, mines)
-            buttons[i][j].config(text=str(count), state="disabled")
-            if count == 0:
+            buttons[i][j].config(state="disabled", bg=self.normal_color)
+            if count != 0:
+                buttons[i][j].config(text=count)
+            else:
                 for x in range(max(0, i - 1), min(w, i + 2)):
                     for y in range(max(0, j - 1), min(h, j + 2)):
                         if buttons[x][y]["state"] == "normal":
@@ -296,7 +315,7 @@ class MineSweeper(BaseInterface):
     def place_remove_flag(self, i, j, buttons, num_of_mines, mines, label) -> None:
         if buttons[i][j]["state"] == "normal":
             self.place_flag(i, j, buttons, num_of_mines, mines, label)
-        elif buttons[i][j]["state"] == "disabled" and buttons[i][j]["text"] == "F":
+        elif buttons[i][j]["state"] == "disabled" and buttons[i][j]["text"] == "🚩":
             self.remove_flag(i, j, buttons, num_of_mines, mines, label)
         self.check_win(buttons, num_of_mines, label)
 
@@ -311,7 +330,7 @@ class MineSweeper(BaseInterface):
         :param label: the label to display the result
         :return: None
         """
-        buttons[i][j].config(text="F", state="disabled")
+        buttons[i][j].config(text="🚩", state="disabled", bg="#00FFFF")
         self.change_flags_label(i, j, buttons, num_of_mines, mines, label, 1)
 
     # define the middle click event
@@ -328,7 +347,7 @@ class MineSweeper(BaseInterface):
         :param label: the label to display the result
         :return: None
         """
-        buttons[i][j].config(text="", state="normal")
+        buttons[i][j].config(text="", state="normal", bg="light blue")
         self.change_flags_label(i, j, buttons, num_of_mines, mines, label, -1)
 
     # change the number of flags label

@@ -376,7 +376,7 @@ class MineSweeper(BaseInterface):
         """
         for mine in mines:
             if buttons[mine[0]][mine[1]]["text"] != "🚩":
-                buttons[mine[0]][mine[1]].config(text="*", background="red")
+                buttons[mine[0]][mine[1]].config(text="*", background="#FF8080")
             else:
                 buttons[mine[0]][mine[1]].config(background="light green")
 

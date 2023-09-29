@@ -323,19 +323,19 @@ class MineSweeper(BaseInterface):
         """
         self.buttons[i][j].config(text="", state="normal", bg="light blue")
         self.change_flags_label(i, j, label, -1)
-        self.check_win(label)
 
     # change the number of flags label
-    def check_flag(self, i, j, mines) -> None:
+    def check_flag(self, i, j, mines, num_of_change) -> None:
         """
         check if the flag is placed correctly
+        :param num_of_change: the number of change
         :param i: the x coordinate
         :param j: the y coordinate
         :param mines: the list of mines
         :return: None
         """
         if (i, j) in mines:
-            self.correct_flags_count += 1
+            self.correct_flags_count += num_of_change
 
     # check if the flag is placed correctly
     def change_flags_label(self, i, j, label, num_of_change) -> None:
@@ -348,7 +348,7 @@ class MineSweeper(BaseInterface):
         :return: None
         """
         self.flags_count += num_of_change
-        self.check_flag(i, j, self.mines)
+        self.check_flag(i, j, self.mines, num_of_change)
         self.flags_label.config(text=f"{self.flags_count} flags")
         self.check_win(label)
 

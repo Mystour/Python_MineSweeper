@@ -378,7 +378,7 @@ class MineSweeper(BaseInterface):
             if buttons[mine[0]][mine[1]]["text"] != "🚩":
                 buttons[mine[0]][mine[1]].config(text="*", background="red")
             else:
-                buttons[mine[0]][mine[1]].config(background="green")
+                buttons[mine[0]][mine[1]].config(background="light green")
 
     def show_answer(self) -> None:
         """

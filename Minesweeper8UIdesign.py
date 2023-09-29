@@ -276,7 +276,7 @@ class MineSweeper(BaseInterface):
             self.mines = self.random_mines(i, j, self.width, self.height)
 
         if (i, j) in self.mines:
-            buttons[i][j].config(text="*", background="red", state="disabled")
+            buttons[i][j].config(text="*", background="#FF8080", state="disabled")  # light red
             self.turn_off_buttons(buttons)
             label.config(text="Game Over")
             self.change_mine_color(buttons, self.mines)
@@ -376,7 +376,7 @@ class MineSweeper(BaseInterface):
         """
         for mine in mines:
             if buttons[mine[0]][mine[1]]["text"] != "🚩":
-                buttons[mine[0]][mine[1]].config(text="*", background="#FF8080")
+                buttons[mine[0]][mine[1]].config(text="*", background="#FF8080")  # light red
             else:
                 buttons[mine[0]][mine[1]].config(background="light green")
 

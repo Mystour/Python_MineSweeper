@@ -281,16 +281,16 @@ class MineSweeper(BaseInterface):
             label.config(text="Game Over")
             self.change_mine_color(buttons, self.mines)
             self.over = True
+            return None
+        count = self.count_mines(i, j, w, h)
+        buttons[i][j].config(state="disabled", bg=self.normal_color)
+        if count != 0:
+            buttons[i][j].config(text=count)
         else:
-            count = self.count_mines(i, j, w, h)
-            buttons[i][j].config(state="disabled", bg=self.normal_color)
-            if count != 0:
-                buttons[i][j].config(text=count)
-            else:
-                for x in range(max(0, i - 1), min(w, i + 2)):
-                    for y in range(max(0, j - 1), min(h, j + 2)):
-                        if buttons[x][y]["state"] == "normal":
-                            self.reveal(x, y, w, h, buttons, label)
+            for x in range(max(0, i - 1), min(w, i + 2)):
+                for y in range(max(0, j - 1), min(h, j + 2)):
+                    if buttons[x][y]["state"] == "normal":
+                        self.reveal(x, y, w, h, buttons, label)
 
     def place_remove_flag(self, i, j, label) -> None:
         if self.buttons[i][j].cget("state") == "normal":

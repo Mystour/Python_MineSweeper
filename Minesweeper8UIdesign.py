@@ -60,7 +60,8 @@ class SelectLevel(BaseInterface):
         """
         super().__init__()
 
-        tk.Label(self.root, text="Select the level", height=5).pack()
+        tk.Label(self.root, text="Select the level",
+                 height=5, font=("Lucida Handwriting", 15), bg="light blue").pack(fill=tk.BOTH, expand=1)
 
         self.frame: tk.Frame = super().create_frame(self.root, 3, 2)
 

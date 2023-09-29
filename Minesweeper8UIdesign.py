@@ -420,7 +420,7 @@ class MineSweeper(BaseInterface):
     def turn_off_buttons(buttons) -> None:
         """
         disable all buttons
-        :param buttons: the list of buttons
+        :param buttons: the list of buttons, keep the parameter to accelerate the program
         :return: None
         """
         for row in buttons:

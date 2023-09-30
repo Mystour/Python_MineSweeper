@@ -6,9 +6,10 @@ import time
 import sqlite3
 
 from baseInterface import BaseInterface
+from buttons import Buttons
 
 
-class MineSweeper(BaseInterface):
+class MineSweeper(BaseInterface, Buttons):
     def __init__(self, width: int, height: int, num_of_mines: int, level: str, callback) -> None:
         """
         initialize the MineSweeper game
@@ -26,7 +27,7 @@ class MineSweeper(BaseInterface):
         self.callback = callback
 
         # create the main window
-        super().__init__()
+        BaseInterface.__init__(self)
 
         # initialize the game state
         self.over = False
@@ -38,7 +39,7 @@ class MineSweeper(BaseInterface):
         self.time_label.pack()
 
         # create the game area
-        self.frame = super().create_frame(self.root, width, height)
+        self.frame = BaseInterface.create_frame(self.root, width, height)
 
         # make all rows and columns in the frame expand with the frame
         for i in range(height):
@@ -69,6 +70,7 @@ class MineSweeper(BaseInterface):
         # initialize the game
         self.correct_flags_count = 0
         self.flags_count = 0
+        Buttons.__init__(self, self.frame, width, height)
         self.buttons = self.place_buttons(self.width, self.height)
 
         # bind the button click event
@@ -76,7 +78,7 @@ class MineSweeper(BaseInterface):
 
         # center the window
         self.root.update()
-        super().center_window(self.root)
+        BaseInterface.center_window(self.root)
 
         # start the timer
         self.start_time = time.time()
@@ -87,28 +89,6 @@ class MineSweeper(BaseInterface):
         self.cur = self.conn.cursor()  # create a cursor
         self.cur.execute("CREATE TABLE IF NOT EXISTS records (level TEXT, time INTEGER)")  # create a table
         self.conn.commit()  # commit the changes
-
-    # create a 2D list to store the buttons
-    def place_buttons(self, h, w) -> list:
-        """
-        create a 2D list to store the buttons
-        :param h: the height of the board
-        :param w: the width of the board
-        :return: the 2D list of buttons
-        """
-        return [[self.create_button(i, j) for j in range(h)] for i in range(w)]
-
-    # create a button
-    def create_button(self, i, j) -> tk.Button:
-        """
-        place a button
-        :param i: the x coordinate
-        :param j: the y coordinate
-        :return: the button
-        """
-        button = tk.Button(self.frame, width=2, height=1, bg="light blue", relief=tk.GROOVE)
-        button.grid(row=i, column=j, sticky=tk.NSEW)
-        return button
 
     # randomly generate the positions of mines
     def random_mines(self, i_first_click, j_first_click, w, h) -> tuple:
@@ -144,7 +124,6 @@ class MineSweeper(BaseInterface):
                     count += 1
         return count
 
-    # bind the button click event
     def bind_buttons(self, w, h, label) -> None:
         """
         bind the button click event
@@ -156,7 +135,8 @@ class MineSweeper(BaseInterface):
         for i0 in range(w):
             for j0 in range(h):
                 self.buttons[i0][j0].config(command=lambda i=i0, j=j0: self.reveal(i, j, w, h, self.buttons, label))
-                self.buttons[i0][j0].bind("<Button-3>", lambda event, i=i0, j=j0: self.place_remove_flag(i, j, label))
+                self.buttons[i0][j0].bind("<Button-3>",
+                                          lambda event, i=i0, j=j0: self.place_remove_flag(i, j, label))
 
     # define the left click event
     def reveal(self, i, j, w, h, buttons, label) -> None:

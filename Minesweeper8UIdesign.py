@@ -5,121 +5,11 @@ import tkinter.messagebox
 import time
 import sqlite3
 
-
-class BaseInterface:
-    def __init__(self):
-        """
-        initialize the main window
-        """
-        self.root = tk.Tk()
-        self.root.title("Minesweeper")
-
-    @staticmethod
-    def center_window(root) -> None:
-        """
-        center the window
-        :param root: the main window
-        :return: None
-        """
-        # get the window dimension
-        width: int = root.winfo_reqwidth()
-        height: int = root.winfo_reqheight()
-
-        # get the screen dimension
-        screen_width: int = root.winfo_screenwidth()
-        screen_height: int = root.winfo_screenheight()
-
-        # calculate the position of the window
-        position_top = int(screen_height / 2 - height / 2)
-        position_right = int(screen_width / 2 - width / 2)
-        root.geometry(f"{width}x{height}+{position_right}+{position_top}")
-
-    @staticmethod
-    def create_frame(root, width, height) -> tk.Frame:
-        """
-        create a frame
-        :param root: the main window
-        :param width: the width of the frame
-        :param height: the height of the frame
-        :return: the frame
-        """
-        frame = tk.Frame(root, width=width, height=height)
-        frame.pack(fill='both', expand=True)
-
-        # make all rows and columns in the frame expand with the frame
-        for i in range(height):
-            frame.rowconfigure(i, weight=1)
-        for i in range(width):
-            frame.columnconfigure(i, weight=1)
-
-        return frame
-
-
-class SelectLevel(BaseInterface):
-    def __init__(self):
-        """
-        initialize the main window
-        """
-        super().__init__()
-
-        tk.Label(self.root, text="Select the level",
-                 height=5, font=("Lucida Handwriting", 15), bg="light blue").pack(fill=tk.BOTH, expand=1)
-
-        self.frame: tk.Frame = super().create_frame(self.root, 3, 2)
-
-        self.buttons = [
-            tk.Button(self.frame, text="Beginner", command=self.beginner),
-            tk.Button(self.frame, text="Intermediate", command=self.intermediate),
-            tk.Button(self.frame, text="Expert", command=self.expert)
-        ]
-
-        self.labels = [
-            tk.Label(self.frame, text="8 * 8, 10 mines", height=3),
-            tk.Label(self.frame, text="16 * 16, 40 mines", height=3),
-            tk.Label(self.frame, text="24 * 24, 99 mines", height=3)
-        ]
-
-        self.place_buttons_labels()
-
-        self.root.update()
-        super().center_window(self.root)
-
-    def beginner(self) -> None:
-        """
-        start the beginner level game
-        :return: None
-        """
-        self.root.destroy()
-        MineSweeper(8, 8, 10, "beginner").root.mainloop()
-
-    def intermediate(self) -> None:
-        """
-        start the intermediate level game
-        :return: None
-        """
-        self.root.destroy()
-        MineSweeper(16, 16, 40, "intermediate").root.mainloop()
-
-    def expert(self) -> None:
-        """
-        start the expert level game
-        :return: None
-        """
-        self.root.destroy()
-        MineSweeper(24, 24, 99, "expert").root.mainloop()
-
-    def place_buttons_labels(self) -> None:
-        """
-        place the buttons and labels
-        :return: None
-        """
-        for i in range(3):
-            self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)  # sticky=tk.NSEW makes the buttons expand
-            self.labels[i].grid(row=1, column=i, sticky=tk.NSEW)
+from baseInterface import BaseInterface
 
 
 class MineSweeper(BaseInterface):
-    def __init__(self, width: int, height: int, num_of_mines: int, level: str) -> None:
+    def __init__(self, width: int, height: int, num_of_mines: int, level: str, callback) -> None:
         """
         initialize the MineSweeper game
         :param width: the width of the board
@@ -133,6 +23,7 @@ class MineSweeper(BaseInterface):
         self.num_of_mines: int = num_of_mines
         self.normal_color: str = "SystemButtonFace"
         self.level = level
+        self.callback = callback
 
         # create the main window
         super().__init__()
@@ -481,16 +372,4 @@ class MineSweeper(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        main()
-
-
-def main():
-    # create the main window
-    game = SelectLevel()
-
-    # start the main event loop
-    game.root.mainloop()
-
-
-if __name__ == '__main__':
-    main()
+        self.callback()

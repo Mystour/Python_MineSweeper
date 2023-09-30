@@ -1,6 +1,6 @@
 import tkinter as tk
-from baseInterface import BaseInterface
-from Minesweeper8UIdesign import MineSweeper
+from src.baseInterface import BaseInterface
+from src.Minesweeper8UIdesign import MineSweeper
 
 
 class SelectLevel(BaseInterface):

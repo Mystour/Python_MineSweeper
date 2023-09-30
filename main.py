@@ -1,4 +1,4 @@
-from selectLevel import SelectLevel
+from src.selectLevel import SelectLevel
 
 
 def main():

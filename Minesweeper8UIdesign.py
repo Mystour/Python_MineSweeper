@@ -3,6 +3,7 @@ import sys
 import tkinter as tk
 import tkinter.messagebox
 import time
+import sqlite3
 
 
 class BaseInterface:
@@ -89,7 +90,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(8, 8, 10).root.mainloop()
+        MineSweeper(8, 8, 10, "beginner").root.mainloop()
 
     def intermediate(self) -> None:
         """
@@ -97,7 +98,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(16, 16, 40).root.mainloop()
+        MineSweeper(16, 16, 40, "intermediate").root.mainloop()
 
     def expert(self) -> None:
         """
@@ -105,7 +106,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(24, 24, 99).root.mainloop()
+        MineSweeper(24, 24, 99, "expert").root.mainloop()
 
     def place_buttons_labels(self) -> None:
         """
@@ -118,7 +119,7 @@ class SelectLevel(BaseInterface):
 
 
 class MineSweeper(BaseInterface):
-    def __init__(self, width: int, height: int, num_of_mines: int) -> None:
+    def __init__(self, width: int, height: int, num_of_mines: int, level: str) -> None:
         """
         initialize the MineSweeper game
         :param width: the width of the board
@@ -131,6 +132,7 @@ class MineSweeper(BaseInterface):
         self.height: int = height
         self.num_of_mines: int = num_of_mines
         self.normal_color: str = "SystemButtonFace"
+        self.level = level
 
         # create the main window
         super().__init__()
@@ -188,6 +190,12 @@ class MineSweeper(BaseInterface):
         # start the timer
         self.start_time = time.time()
         self.update_timer(self.time_label)
+
+        # connect to the database
+        self.conn = sqlite3.connect("records.db")  # connect to the database
+        self.cur = self.conn.cursor()  # create a cursor
+        self.cur.execute("CREATE TABLE IF NOT EXISTS records (level TEXT, time INTEGER)")  # create a table
+        self.conn.commit()  # commit the changes
 
     # create a 2D list to store the buttons
     def place_buttons(self, h, w) -> list:
@@ -360,10 +368,26 @@ class MineSweeper(BaseInterface):
         :return: the number of mines around (i, j)
         """
         if self.correct_flags_count == self.num_of_mines == self.flags_count:
+            self.check_record(int(time.time() - self.start_time))
             self.turn_off_buttons(self.buttons)
             label.config(text="You Win")
             self.change_mine_color(self.buttons, self.mines)
             self.over = True
+
+    # check if it is a new record
+    def check_record(self, elapsed_time) -> None:
+        """
+        check if it is a new record
+        :param elapsed_time: the time elapsed
+        :return: None
+        """
+        self.cur.execute(f"SELECT * FROM records WHERE level = '{self.level}'")
+        records = self.cur.fetchall()
+        if len(records) == 0 or elapsed_time < records[0][1]:
+            self.cur.execute(f"DELETE FROM records WHERE level = '{self.level}'")
+            self.cur.execute(f"INSERT INTO records VALUES ('{self.level}', {elapsed_time})")
+            self.conn.commit()
+            tk.messagebox.showinfo("New Record", f"Congratulations! You set a new record: {elapsed_time} s")
 
     # change the color of the mine when the game is over
     @staticmethod

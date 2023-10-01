@@ -25,6 +25,7 @@ class MineSweeper(BaseInterface, Buttons):
         self.normal_color: str = "SystemButtonFace"
         self.level = level
         self.callback = callback
+        self.start_time = 0
 
         # create the main window
         BaseInterface.__init__(self)
@@ -61,7 +62,7 @@ class MineSweeper(BaseInterface, Buttons):
         # create the game buttons
         self.button_quit = tk.Button(self.root, text="quit", command=self.quit, width=10)
         self.button_quit.pack(side=tk.LEFT)
-        self.button_restart = tk.Button(self.root, text="restart", command=self.restart, width=10)
+        self.button_restart = tk.Button(self.root, text="rechoose", command=self.rechoose, width=10)
         self.button_restart.pack(side=tk.LEFT)
         self.button_show_hide_answer = tk.Button(self.root, text="show answer",
                                                  command=lambda:
@@ -82,10 +83,6 @@ class MineSweeper(BaseInterface, Buttons):
         # center the window
         self.root.update()
         BaseInterface.center_window(self.root)
-
-        # start the timer
-        self.start_time = time.time()
-        self.update_timer(self.time_label)
 
         # connect to the database
         self.conn = sqlite3.connect("records.db")  # connect to the database.
@@ -156,6 +153,10 @@ class MineSweeper(BaseInterface, Buttons):
         if not self.first_click_done:
             self.first_click_done = True
             self.mines = self.random_mines(i, j, self.width, self.height)
+
+            # start the timer
+            self.start_time = time.time()
+            self.update_timer(self.time_label)
 
         if (i, j) in self.mines:
             buttons[i][j].config(text="*", background="#FF8080", state="disabled")  # light red
@@ -362,7 +363,7 @@ class MineSweeper(BaseInterface, Buttons):
         self.root.destroy()
         sys.exit()
 
-    def restart(self) -> None:
+    def rechoose(self) -> None:
         """
         restart the game
         :return: None

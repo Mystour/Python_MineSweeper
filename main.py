@@ -1,12 +1,8 @@
-from src.selectLevel import SelectLevel
+from src.menu import Menu
 
 
 def main():
-    # create the main window
-    game = SelectLevel(main)
-
-    # start the main event loop
-    game.root.mainloop()
+    Menu().root.mainloop()
 
 
 if __name__ == '__main__':

@@ -13,20 +13,20 @@ class SelectLevel(BaseInterface):
         self.callback = callback
 
         tk.Label(self.root, text="Select the level",
-                 height=5, font=("Lucida Handwriting", 15), bg="light blue").pack(fill=tk.BOTH, expand=1)
+                 height=5, font=("Lucida Handwriting", 20), bg="light blue").pack(fill=tk.BOTH, expand=1)
 
         self.frame: tk.Frame = super().create_frame(self.root, 3, 2)
 
         self.buttons = [
-            tk.Button(self.frame, text="Beginner", command=self.beginner),
-            tk.Button(self.frame, text="Intermediate", command=self.intermediate),
-            tk.Button(self.frame, text="Expert", command=self.expert)
+            tk.Button(self.frame, text="Beginner", font=("Lucida Handwriting", 15), command=self.beginner),
+            tk.Button(self.frame, text="Intermediate", font=("Lucida Handwriting", 15), command=self.intermediate),
+            tk.Button(self.frame, text="Expert", font=("Lucida Handwriting", 15), command=self.expert)
         ]
 
         self.labels = [
-            tk.Label(self.frame, text="8 * 8, 10 mines", height=3),
-            tk.Label(self.frame, text="16 * 16, 40 mines", height=3),
-            tk.Label(self.frame, text="24 * 24, 99 mines", height=3)
+            tk.Label(self.frame, text="8*8, 10 mines", height=3, font="bold"),
+            tk.Label(self.frame, text="16*16, 40 mines", height=3, font="bold"),
+            tk.Label(self.frame, text="24*24, 99 mines", height=3, font="bold")
         ]
 
         self.place_buttons_labels()

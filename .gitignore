@@ -1,4 +1,4 @@
 # created by virtualenv automatically
 
 # Ignore all .db files
-records.db
+*.db

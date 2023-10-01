@@ -67,6 +67,8 @@ class MineSweeper(BaseInterface, Buttons):
                                                  command=lambda:
                                                  self.show_hide_answer(), width=15)
         self.button_show_hide_answer.pack(side=tk.LEFT)
+        self.button_show_records = tk.Button(self.root, text="show records", command=self.show_records, width=15)
+        self.button_show_records.pack(side=tk.LEFT)
 
         # initialize the game
         self.correct_flags_count = 0
@@ -260,6 +262,18 @@ class MineSweeper(BaseInterface, Buttons):
             self.cur.execute(f"INSERT INTO records VALUES ('{self.level}', {elapsed_time})")
             self.conn.commit()
             tk.messagebox.showinfo("New Record", f"Congratulations! You set a new record: {elapsed_time} s")
+
+    def show_records(self) -> None:
+        """
+        show the records
+        :return: None
+        """
+        self.cur.execute(f"SELECT * FROM records WHERE level = '{self.level}'")
+        records = self.cur.fetchall()
+        if len(records) == 0:
+            tk.messagebox.showinfo("No Record", "No record yet")
+        else:
+            tk.messagebox.showinfo("Record", f"Current record: {records[0][1]} s")
 
     # change the color of the mine when the game is over
     @staticmethod

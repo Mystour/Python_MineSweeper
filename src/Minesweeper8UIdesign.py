@@ -32,6 +32,7 @@ class MineSweeper(BaseInterface, Buttons):
         # initialize the game state
         self.over = False
         self.is_show_answer = False
+        self.show_answer_done = False
         self.first_click_done = False
 
         # create the timer
@@ -239,11 +240,11 @@ class MineSweeper(BaseInterface, Buttons):
         :return: the number of mines around (i, j)
         """
         if self.correct_flags_count == self.num_of_mines == self.flags_count:
-            self.check_record(int(time.time() - self.start_time))
             self.turn_off_buttons(self.buttons)
             label.config(text="You Win")
             self.change_mine_color(self.buttons, self.mines)
             self.over = True
+            self.check_record(int(time.time() - self.start_time))
 
     # check if it is a new record
     def check_record(self, elapsed_time) -> None:
@@ -254,7 +255,7 @@ class MineSweeper(BaseInterface, Buttons):
         """
         self.cur.execute(f"SELECT * FROM records WHERE level = '{self.level}'")
         records = self.cur.fetchall()
-        if len(records) == 0 or elapsed_time < records[0][1]:
+        if (len(records) == 0 or elapsed_time < records[0][1]) and not self.show_answer_done:
             self.cur.execute(f"DELETE FROM records WHERE level = '{self.level}'")
             self.cur.execute(f"INSERT INTO records VALUES ('{self.level}', {elapsed_time})")
             self.conn.commit()
@@ -308,6 +309,7 @@ class MineSweeper(BaseInterface, Buttons):
             self.is_show_answer = False
         else:
             self.show_answer()
+            self.show_answer_done = True
             self.is_show_answer = True
 
     # disable all buttons

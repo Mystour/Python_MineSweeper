@@ -2,3 +2,6 @@
 
 # Ignore all .db files
 *.db
+
+# Ignore the virtualenv directory
+venv/

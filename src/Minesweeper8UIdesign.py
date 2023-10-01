@@ -86,7 +86,7 @@ class MineSweeper(BaseInterface, Buttons):
         self.update_timer(self.time_label)
 
         # connect to the database
-        self.conn = sqlite3.connect("records.db")  # connect to the database
+        self.conn = sqlite3.connect("../records.db")  # connect to the database.
         self.cur = self.conn.cursor()  # create a cursor
         self.cur.execute("CREATE TABLE IF NOT EXISTS records (level TEXT, time INTEGER)")  # create a table
         self.conn.commit()  # commit the changes

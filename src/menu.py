@@ -9,7 +9,6 @@ class Menu(BaseInterface):
         initialize the main window
         """
         super().__init__()
-        self.callback = self.call
         self.root.title("Minesweeper")
 
         # Define colors for different categories of labels
@@ -62,21 +61,18 @@ class Menu(BaseInterface):
             self.button_frame,
             text="Start",
             font=("Helvetica", 30),
-            command=lambda: self.start(self.callback)
+            command=lambda: self.start()
         ).pack()
 
         # center the window
         self.root.update()
         super().center_window(self.root)
 
-    def start(self, callback):
+    def start(self):
         """
         start the game
         :return: None
         """
         self.root.destroy()
         from src.selectLevel import SelectLevel
-        SelectLevel(callback).root.mainloop()
-
-    def call(self):
-        SelectLevel(self.callback).root.mainloop()
+        SelectLevel().root.mainloop()

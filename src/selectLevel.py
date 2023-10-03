@@ -4,13 +4,13 @@ from src.Minesweeper8UIdesign import MineSweeper
 
 
 class SelectLevel(BaseInterface):
-    def __init__(self, callback):
+    def __init__(self):
         """
         initialize the main window
         """
         super().__init__()
 
-        self.callback = callback
+        self.callback = self.call
 
         tk.Label(self.root, text="Select the level",
                  height=5, font=("Lucida Handwriting", 20), bg="light blue").pack(fill=tk.BOTH, expand=1)
@@ -66,3 +66,6 @@ class SelectLevel(BaseInterface):
         for i in range(3):
             self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)  # sticky=tk.NSEW makes the buttons expand
             self.labels[i].grid(row=1, column=i, sticky=tk.NSEW)
+
+    def call(self):
+        self.root.mainloop()

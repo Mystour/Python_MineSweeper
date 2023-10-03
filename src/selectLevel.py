@@ -4,13 +4,11 @@ from src.Minesweeper8UIdesign import MineSweeper
 
 
 class SelectLevel(BaseInterface):
-    def __init__(self, callback):
+    def __init__(self):
         """
         initialize the main window
         """
         super().__init__()
-
-        self.callback = callback
 
         tk.Label(self.root, text="Select the level",
                  height=5, font=("Lucida Handwriting", 20), bg="light blue").pack(fill=tk.BOTH, expand=1)
@@ -40,7 +38,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(8, 8, 10, "beginner", self.callback).root.mainloop()
+        MineSweeper(8, 8, 10, "beginner", self.call).root.mainloop()
 
     def intermediate(self) -> None:
         """
@@ -48,7 +46,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(16, 16, 40, "intermediate", self.callback).root.mainloop()
+        MineSweeper(16, 16, 40, "intermediate", self.call).root.mainloop()
 
     def expert(self) -> None:
         """
@@ -56,7 +54,7 @@ class SelectLevel(BaseInterface):
         :return: None
         """
         self.root.destroy()
-        MineSweeper(24, 24, 99, "expert", self.callback).root.mainloop()
+        MineSweeper(24, 24, 99, "expert", self.call).root.mainloop()
 
     def place_buttons_labels(self) -> None:
         """
@@ -66,3 +64,7 @@ class SelectLevel(BaseInterface):
         for i in range(3):
             self.buttons[i].grid(row=0, column=i, sticky=tk.NSEW)  # sticky=tk.NSEW makes the buttons expand
             self.labels[i].grid(row=1, column=i, sticky=tk.NSEW)
+
+    @staticmethod
+    def call():
+        SelectLevel().root.mainloop()  # can't use self.root.mainloop() here as self.root is destroyed
